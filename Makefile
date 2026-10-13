@@ -2,7 +2,7 @@
 
 THRESHOLD ?= 0.99
 
-.PHONY: help test train compare up down logs dev psql
+.PHONY: help test train compare up down logs dev psql replay
 
 help:
 	@echo make test      - run the tests
@@ -13,6 +13,7 @@ help:
 	@echo make logs      - follow the API logs
 	@echo make dev       - run the API locally with auto-reload (:8010, needs Postgres up)
 	@echo make psql      - open a SQL shell in the database
+	@echo make replay    - send validation data to the running API and compare decisions
 
 test:
 	uv run pytest
@@ -39,3 +40,6 @@ dev:
 
 psql:
 	docker compose exec postgres sh -c "psql -U $$POSTGRES_USER -d $$POSTGRES_DB"
+
+replay:
+	uv run python scripts/replay.py
