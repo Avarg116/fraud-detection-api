@@ -62,6 +62,14 @@ The API runs at http://127.0.0.1:8020. You can try it at http://127.0.0.1:8020/d
 
 Other commands: `make test`, `make compare`, `make replay`, `make down` (see `make help`).
 
+## Deployment
+
+I deployed it on AWS.
+
+- The Docker image is in ECR and the model files are in S3.
+- The API and Postgres run with Docker Compose on an EC2 server.
+- The server reads from ECR and S3 using an IAM role.
+
 ## Project structure
 
 ```
