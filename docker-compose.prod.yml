@@ -1,0 +1,6 @@
+# Used on the server: run the image from ECR instead of building it
+services:
+  api:
+    image: ${API_IMAGE}
+    ports: !override
+      - "80:8000"
