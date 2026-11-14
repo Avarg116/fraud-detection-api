@@ -2,8 +2,7 @@
 
 ![CI](https://github.com/Avarg116/fraud-detection-api/actions/workflows/ci.yml/badge.svg)
 
-A FastAPI service that scores credit card transactions for fraud with a scikit-learn model
-and stores every decision in PostgreSQL.
+A FastAPI service that scores credit card transactions for fraud with a logistic regression model and stores every decision in PostgreSQL.
 
 ## How it works
 
@@ -43,6 +42,7 @@ I also replayed all 42,722 validation transactions through the running API. Ever
 - I split the data by time (70/15/15) so the model is trained on earlier transactions and tested on later ones.
 - I tried LightGBM too, but it wasn't better than logistic regression (0.83 vs 0.84 PR-AUC on validation, and a bootstrap test showed no real difference), so I kept the simpler model.
 - I picked the 0.99 threshold on the validation set. Lower thresholds caught a few more frauds but flagged a lot more normal transactions. At 0.99 about half the flags are real fraud.
+- I deployed it to AWS. The Docker image is in ECR, the model files are in S3, and the API ran on EC2 with an IAM role.
 
 ## Run it
 
@@ -62,14 +62,6 @@ The API runs at http://127.0.0.1:8020. You can try it at http://127.0.0.1:8020/d
 
 Other commands: `make test`, `make compare`, `make replay`, `make down` (see `make help`).
 
-## Deployment
-
-I deployed it on AWS.
-
-- The Docker image is in ECR and the model files are in S3.
-- The API and Postgres run with Docker Compose on an EC2 server.
-- The server reads from ECR and S3 using an IAM role.
-
 ## Project structure
 
 ```
@@ -79,7 +71,3 @@ sql/schema.sql        predictions table
 scripts/replay.py     replay validation data through the running API
 tests/                pytest tests (run in GitHub Actions on every push)
 ```
-
-## Things to improve
-
-- Use a dataset with real details, like IEEE-CIS. The data I used is anonymized, so I couldn’t create my own features or explain which ones matter.
